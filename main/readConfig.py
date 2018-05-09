@@ -1,4 +1,4 @@
-#encoding:utf-8
+# encoding:utf-8
 
 import os
 import configparser
@@ -42,6 +42,10 @@ class _Services:
         @property
         def port(self):
             return readconfig().get('MySQL', 'port')
+
+        @property
+        def database(self):
+            return readconfig().get('MySQL', 'database')
 
     class WebdriverPath:
         @property
