@@ -5,6 +5,8 @@ from main.readConfig import Services
 from lxml import etree
 from functools import wraps
 import mysql.connector
+from main.utils import gen_rand_str
+
 
 def singleton(cls):
     """
@@ -27,6 +29,7 @@ def singleton(cls):
 class MySQLSingle(object):
     def __init__(self, conn=''):
         self.conn = conn
+        self.get_conn()
 
     def get_conn(self):
         try:
@@ -59,6 +62,7 @@ class MySQLSingle(object):
             self.conn.rollback()
 
     def insert_one_to_relation(self, params):
+        """relation表中插入数据"""
         sql = "INSERT INTO relation (layer_number, id, last_id, title, text) VALUES(%d, %s, %d, %s, %s)"
         try:
             # 执行sql语句
@@ -70,28 +74,40 @@ class MySQLSingle(object):
             # 发生错误时回滚
             self.conn.rollback()
 
-#TODO
+    def insert_many_to_relation(self, params):
+        sql = "INSERT INTO relation (layer_number, id, last_id, title, text) VALUES(%d, %s, %d, %s, %s)"
+        try:
+            # 执行sql语句
+            self.conn.cursor().executemany(sql, params)
+            # 提交到数据库执行
+            self.conn.commit()
+        except Exception as e:
+            print(e)
+            # 发生错误时回滚
+            self.conn.rollback()
+
+# TODO
 
 
 class Drivers(object):
     """firefox,ie,chrome驱动"""
     def __init__(self):
         self.url = Services.TargetUrl.url
-        self.goal = dict()
+        self.driver = None
 
-    def _firefox_driver(self):
+    @staticmethod
+    def _firefox_driver():
         driver = webdriver.Firefox(executable_path=Services.WebdriverPath.firefox)
-        driver.get(self.url)
         return driver
 
-    def _chrome_driver(self):
+    @staticmethod
+    def _chrome_driver():
         driver = webdriver.Chrome(executable_path=Services.WebdriverPath.chrome)
-        driver.get(self.url)
         return driver
 
-    def _ie_driver(self):
+    @staticmethod
+    def _ie_driver():
         driver = webdriver.Ie(executable_path=Services.WebdriverPath.ie)
-        driver.get(self.url)
         return driver
 
 
@@ -109,10 +125,21 @@ class Parser(Drivers):
         self.current_url = None
         self.current_window_handle = None
         self.Xpath_list = list()
-        self.number = None
+        self.number = 1
+        self.new_url = list()
+        self.mysql = MySQLSingle()
+
+    def _driver_open_url(self, url):
+        """
+        打开一个URL
+        :param url:
+        :return:
+        """
+        self.driver.get(url=url)
+        self._update_current_url()
 
     @property
-    def parser_by_xml(self):
+    def _parser_by_xml(self):
         """
         将复杂HTML文档转换成树形结构
         :param driver: webdriver对象
@@ -123,7 +150,7 @@ class Parser(Drivers):
         return page
 
     @staticmethod
-    def tag_a_has_href(page):
+    def _tag_a_has_href(page):
         """
         提取可操作a标签
         :param page: 结构树对象
@@ -136,7 +163,7 @@ class Parser(Drivers):
                 tag_has_href.append(a)
         return tag_has_href
 
-    def extract_xpath_from_page(self, page, tag):
+    def _extract_xpath_from_page(self, page, tag):
         """
         提取Xpath列表
         :param page: 结构树对象
@@ -147,21 +174,41 @@ class Parser(Drivers):
         for e in tag:
             self.Xpath_list.append(tree.getpath(e))
 
-    def get_xpath(self):
+    def _get_xpath(self, page, tag):
         """获取xpath"""
-        page = self.parser_by_xml()
-        tag = self.tag_a_has_href(page=page)
-        self.extract_xpath_from_page(page=page, tag=tag)
+        # page = self._parser_by_xml()
+        # tag = self._tag_a_has_href(page=page)
+        self._extract_xpath_from_page(page=page, tag=tag)
+        self.number = self.number + 1
 
-    def update_current_url(self):
+    def _update_current_url(self):
         """更新当前URL"""
         self.current_url = self.driver.current_url
 
-    def update_current_windows_handle(self):
+    def _update_current_windows_handle(self):
         """更新窗口句柄"""
         self.current_window_handle = self.driver.current_window_handle
 
-
+    def all_aa(self, url):
+        self._driver_open_url(url)
+        page = self._parser_by_xml()
+        tag = self._tag_a_has_href(page)
+        self._get_xpath(page=page, tag=tag)
+        for i in range(len(self.Xpath_list)):
+            try:
+                self.driver.find_element_by_xpath(xpath=self.Xpath_list[i]).click()
+                if self.driver.current_url == self.current_url:
+                    continue
+                else:
+                    self.new_url.append(self.driver.current_url)
+                    self.driver.back()
+            except:
+                del self.Xpath_list[i]
+                print('del wrong xpath')
+                pass
+            params = (gen_rand_str(length=8, s_type='digit'), self.driver.current_url, self.Xpath_list[i])
+            self.mysql.insert_one_to_xpath(params)
+        self.mysql.insert_one_to_relation()
 
 
 
