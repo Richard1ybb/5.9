@@ -5,17 +5,20 @@ from collections import OrderedDict
 import random
 import string
 
+
 def singleton(cls):
     """单例模式装饰器
     :param cls:
     :return:
     """
     instances = {}
+
     def _singleton(*args, **kwargs):
         if cls not in instances:
             instances[cls] = cls(*args, **kwargs)
         return instances[cls]
     return _singleton
+
 
 def singleton_with_parameters(cls):
     """检查参数的单例模式装饰器,与singleton的区别为: 相同的初始化参数为同一个实例
@@ -30,6 +33,7 @@ def singleton_with_parameters(cls):
             instances[key] = cls(*args, **kwargs)
         return instances[key]
     return _singleton
+
 
 class SingletonIfSameParameters(type):
     """如果初始化参数一致，则单实例"""

@@ -50,7 +50,7 @@ class MySQLSingle(object):
 
     def insert_one_to_xpath(self, params):
         """xpath表中插入一条数据"""
-        sql = "INSERT INTO xpath (id, url, xpath) VALUES(%d, %s, %s)"
+        sql = "INSERT INTO xpath (id, url, xpath, point_url) VALUES(%d, %s, %s, %s)"
         try:
             # 执行sql语句
             self.conn.cursor().execute(sql, params)
@@ -62,8 +62,12 @@ class MySQLSingle(object):
             self.conn.rollback()
 
     def insert_one_to_relation(self, params):
-        """relation表中插入数据"""
-        sql = "INSERT INTO relation (layer_number, id, last_id, title, text) VALUES(%d, %s, %d, %s, %s)"
+        """
+        relation表中插入一条数据
+        :param params:
+        :return:
+        """
+        sql = "INSERT INTO relation (layer_number, id, title, text) VALUES(%d, %d, %s, %s)"
         try:
             # 执行sql语句
             self.conn.cursor().execute(sql, params)
@@ -75,7 +79,12 @@ class MySQLSingle(object):
             self.conn.rollback()
 
     def insert_many_to_relation(self, params):
-        sql = "INSERT INTO relation (layer_number, id, last_id, title, text) VALUES(%d, %s, %d, %s, %s)"
+        """
+        relation表中插入多条数据
+        :param params:
+        :return:
+        """
+        sql = "INSERT INTO relation (layer_number, id, last_id, title, text) VALUES(%d, %d, %d, %s, %s)"
         try:
             # 执行sql语句
             self.conn.cursor().executemany(sql, params)
@@ -86,6 +95,34 @@ class MySQLSingle(object):
             # 发生错误时回滚
             self.conn.rollback()
 
+    def insert_many_to_content(self, params):
+        """
+        content表中插入多条数据
+        :param params:
+        :return:
+        """
+        sql = "INSERT INTO content (url, father_url, content) VALUES(%s, %s, %s)"
+        try:
+            # 执行sql语句
+            self.conn.cursor().executemany(sql, params)
+            # 提交到数据库执行
+            self.conn.commit()
+        except Exception as e:
+            print(e)
+            # 发生错误时回滚
+            self.conn.rollback()
+
+    def update_false_status_to_content(self, url):
+        sql = "UPDATE content SET status = true WHERE url = '%s'" % url
+        try:
+            # 执行sql语句
+            self.conn.cursor().execute(sql)
+            # 提交到数据库执行
+            self.conn.commit()
+        except Exception as e:
+            print(e)
+            # 发生错误时回滚
+            self.conn.rollback()
 # TODO
 
 
@@ -147,7 +184,7 @@ class Parser(Drivers):
         """
         html = self.driver.page_source
         page = etree.HTML(html)
-        return page
+        return page, html
 
     @staticmethod
     def _tag_a_has_href(page):
@@ -159,7 +196,7 @@ class Parser(Drivers):
         tag_a = page.xpath(u'//a')
         tag_has_href = list()
         for a in tag_a:
-            if "href" in a.attrs:
+            if "href" in a.attrib:
                 tag_has_href.append(a)
         return tag_has_href
 
@@ -189,26 +226,36 @@ class Parser(Drivers):
         """更新窗口句柄"""
         self.current_window_handle = self.driver.current_window_handle
 
-    def all_aa(self, url):
+    def all_aa(self, url, layer_number):
         self._driver_open_url(url)
-        page = self._parser_by_xml()
+        page, html = self._parser_by_xml()
         tag = self._tag_a_has_href(page)
+        text = [a.text for a in tag]
         self._get_xpath(page=page, tag=tag)
         for i in range(len(self.Xpath_list)):
-            try:
-                self.driver.find_element_by_xpath(xpath=self.Xpath_list[i]).click()
-                if self.driver.current_url == self.current_url:
-                    continue
-                else:
-                    self.new_url.append(self.driver.current_url)
-                    self.driver.back()
-            except:
-                del self.Xpath_list[i]
-                print('del wrong xpath')
+            element = self.driver.find_element_by_xpath(xpath=self.Xpath_list[i])
+            if element.is_enabled() is True:
+                try:
+                    element.click()
+                    if self.driver.current_url == self.current_url:
+                        continue
+                    else:
+                        self.new_url.append(self.driver.current_url)
+                        self.driver.back()
+                except:
+                    del self.Xpath_list[i]
+                    print('del wrong xpath')
+                    pass
+            else:
                 pass
-            params = (gen_rand_str(length=8, s_type='digit'), self.driver.current_url, self.Xpath_list[i])
-            self.mysql.insert_one_to_xpath(params)
-        self.mysql.insert_one_to_relation()
+            uid = gen_rand_str(length=8, s_type='digit')
+            self.mysql.insert_one_to_xpath((uid, self.driver.current_url, self.Xpath_list[i], self.driver.current_url))
+            self.mysql.insert_one_to_relation((layer_number, uid, self.driver.title, text[i]))
+        params = [(Url, url, html) for Url in self.new_url]
+        self.mysql.insert_many_to_content(params=params)
+        self.mysql.update_false_status_to_content(url=url)
+
+
 
 
 
