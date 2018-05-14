@@ -3,11 +3,16 @@
 import os
 import configparser
 
+
 def readconfig():
     config = configparser.RawConfigParser()
-    file_path = os.path.abspath(os.path.dirname(os.getcwd())) + "\init.cfg"
+    file_path = "C:\\Users\\Summer\\PycharmProjects\\5.9\\main\\init.conf"
+    #file_path = os.path.abspath(os.path.dirname(os.getcwd())) + "\\5.9\\main\\init.conf"
     config.read(file_path)
     return config
+
+
+cf = readconfig()
 
 # a_float = config.getfloat('Section1', 'a_float')
 # an_int = config.getint('Section1', 'an_int')
@@ -20,50 +25,50 @@ def readconfig():
 
 
 class _Services:
-    class TargetUrl:
-        @property
-        def url(self):
-            return readconfig().get('target_url', 'url')
+
+    @property
+    def url(self):
+        print(cf.get('target_url', 'url'))
+        return cf.get('target_url', 'url')
+
+    @property
+    def host(self):
+        return cf.get('MySQL', 'host')
+
+    @staticmethod
+    def userame():
+        print(cf.get('MySQL', 'name'))
+        return cf.get('MySQL', 'name')
+
+    @staticmethod
+    def password():
+        return cf.get('MySQL', 'password')
+
+    @staticmethod
+    def port():
+        return cf.getint('MySQL', 'port')
+
+    @staticmethod
+    def database():
+        return cf.get('MySQL', 'database')
 
 
-    class Mysql:
-        @property
-        def host(self):
-            return readconfig().get('MySQL', 'host')
+    @staticmethod
+    def firefox():
+        return cf.get('webdriver_path', 'Firefox')
 
-        @property
-        def username(self):
-            return readconfig().get('MySQL', 'name')
+    @staticmethod
+    def chrome():
+        return cf.get('webdriver_path', 'chrome')
 
-        @property
-        def password(self):
-            return readconfig().get('MySQL', 'password')
+    @staticmethod
+    def ie():
+        return cf.get('webdriver_path', 'ie')
 
-        @property
-        def port(self):
-            return readconfig().get('MySQL', 'port')
 
-        @property
-        def database(self):
-            return readconfig().get('MySQL', 'database')
-
-    class WebdriverPath:
-        @property
-        def firefox(self):
-            return readconfig().get('webdriver_path', 'Firefox')
-
-        @property
-        def chrome(self):
-            return readconfig().get('webdriver_path', 'chrome')
-
-        @property
-        def ie(self):
-            return readconfig().get('webdriver_path', 'ie')
-
-    class Depth:
-        @property
-        def depth(self):
-            return readconfig().get('depth', 'depth')
+    @staticmethod
+    def depth():
+        return cf.get('depth', 'depth')
 
 
 Services = _Services()

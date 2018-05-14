@@ -4,7 +4,7 @@ from selenium import webdriver
 from main.readConfig import Services
 from lxml import etree
 from functools import wraps
-import mysql.connector
+import pymysql
 from main.utils import gen_rand_str
 
 
@@ -27,21 +27,23 @@ def singleton(cls):
 # 数据库连接实例
 @singleton
 class MySQLSingle(object):
-    def __init__(self, conn=''):
+    def __init__(self, conn=None):
         self.conn = conn
         self.get_conn()
 
     def get_conn(self):
+        print(Services.Mysql.host)
         try:
-            self.conn = mysql.connector.connect(host=Services.Mysql.host,
-                                                port=Services.Mysql.port,
-                                                user=Services.Mysql.username,
-                                                password=Services.Mysql.password,
-                                                database=Services.Mysql.database,
-                                                charset='utf8'
-                                                )
+            self.conn = pymysql.connect(host=Services.Mysql.host,
+                                        port=Services.Mysql.port,
+                                        user=Services.Mysql.username,
+                                        password=Services.Mysql.password,
+                                        database=Services.Mysql.database,
+                                        charset='utf8'
+                                        )
         except Exception as e:
             print('File to connect database: %s' % e)
+            print('stop')
         return self.conn
 
     def end_conn(self):
@@ -97,11 +99,11 @@ class MySQLSingle(object):
 
     def insert_many_to_content(self, params):
         """
-        content表中插入多条数据
+        content表中插入多条数据(url, father_url, layer_number)
         :param params:
         :return:
         """
-        sql = "INSERT INTO content (url, father_url, content) VALUES(%s, %s, %s)"
+        sql = "INSERT INTO content (url, father_url, layer_number) VALUES(%s, %s, %s)"
         try:
             # 执行sql语句
             self.conn.cursor().executemany(sql, params)
@@ -112,8 +114,8 @@ class MySQLSingle(object):
             # 发生错误时回滚
             self.conn.rollback()
 
-    def update_false_status_to_content(self, url):
-        sql = "UPDATE content SET status = true WHERE url = '%s'" % url
+    def update_html_to_content(self, url, html):
+        sql = "UPDATE content SET content = '%s' WHERE url = '%s'" % html, url
         try:
             # 执行sql语句
             self.conn.cursor().execute(sql)
@@ -123,6 +125,33 @@ class MySQLSingle(object):
             print(e)
             # 发生错误时回滚
             self.conn.rollback()
+
+    def update_true_status_to_content(self, url):
+        sql = "UPDATE content SET status = ture WHERE url = '%s'" % url
+        try:
+            # 执行sql语句
+            self.conn.cursor().execute(sql)
+            # 提交到数据库执行
+            self.conn.commit()
+        except Exception as e:
+            print(e)
+            # 发生错误时回滚
+            self.conn.rollback()
+
+    def select_url_from_content(self):
+        sql = "select url from content WHERE status = false"
+        a = list()
+        try:
+            self.conn.cursor().execute(sql)
+            data = self.conn.cursor().fetchall()
+            for i in data:
+                a.append(i[0])
+        except Exception as e:
+            print(e)
+            # 发生错误时回滚
+            self.conn.rollback()
+        return a
+
 # TODO
 
 
@@ -134,7 +163,7 @@ class Drivers(object):
 
     @staticmethod
     def _firefox_driver():
-        driver = webdriver.Firefox(executable_path=Services.WebdriverPath.firefox)
+        driver = webdriver.Firefox(executable_path=Services.WebDriverPath.firefox())
         return driver
 
     @staticmethod
@@ -175,7 +204,6 @@ class Parser(Drivers):
         self.driver.get(url=url)
         self._update_current_url()
 
-    @property
     def _parser_by_xml(self):
         """
         将复杂HTML文档转换成树形结构
@@ -247,13 +275,16 @@ class Parser(Drivers):
                     print('del wrong xpath')
                     pass
             else:
+                del self.Xpath_list[i]
+                print('del unable element')
                 pass
             uid = gen_rand_str(length=8, s_type='digit')
             self.mysql.insert_one_to_xpath((uid, self.driver.current_url, self.Xpath_list[i], self.driver.current_url))
             self.mysql.insert_one_to_relation((layer_number, uid, self.driver.title, text[i]))
-        params = [(Url, url, html) for Url in self.new_url]
+        params = [(Url, url) for Url in self.new_url]
         self.mysql.insert_many_to_content(params=params)
-        self.mysql.update_false_status_to_content(url=url)
+        self.mysql.update_html_to_content(url=url, html=html)
+        self.mysql.update_true_status_to_content(url=url)
 
 
 
