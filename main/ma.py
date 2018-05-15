@@ -2,22 +2,23 @@
 
 from main.parse_html import Drivers, Parser, MySQLSingle
 from main.utils import gen_rand_str
+from main.readConfig import Services
 
 
 class Main(Parser):
     def __init__(self):
         super(Main, self).__init__(a="firefox")
 
-
     def produce_test_case(self, length):
         for i in range(length):
             if i == 0:
-                urls = ["https://www.dji.com/cn"]
+                urls = [Services.url]
             else:
                 urls = MySQLSingle.select_url_from_content()
             for ur in urls:
                 self.all_aa(url=ur, layer_number=i + 1)
 
+        self.close_connect()
 
     def check_xpath(self, dr):
         """检查xpath并入库"""

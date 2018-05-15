@@ -40,3 +40,229 @@ Child 11204, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/s
 [Child 12676, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/
 ###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
 
+1526348931426	geckodriver	INFO	geckodriver 0.20.1
+1526348931456	geckodriver	INFO	Listening on 127.0.0.1:53849
+1526348934536	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.eczG3WNhHTQW"
+1526348943436	Marionette	INFO	Enabled via --marionette
+[Child 10056, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 101526348962256	Marionette	INFO	Listening on port 53857
+1526348962900	Marionette	WARN	TLS certificate errors will be ignored for this session
+[Parent 8744, Gecko_IOThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 5796, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 57[Child 11832, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 11832*** UTM:SVC TimerManager:registerTimer called after profile-before-change notification. Ignoring timer registration for id: telemetry_modules_ping
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1526348996458	geckodriver	INFO	geckodriver 0.20.1
+1526348996478	geckodriver	INFO	Listening on 127.0.0.1:53917
+1526348999479	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.zStzdb01BYMn"
+1526349001370	Marionette	INFO	Enabled via --marionette
+1526349005658	Marionette	INFO	Listening on port 53925
+1526349005810	Marionette	WARN	TLS certificate errors will be ignored for this session
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1526349087152	geckodriver	INFO	geckodriver 0.20.1
+1526349087192	geckodriver	INFO	Listening on 127.0.0.1:53960
+1526349090132	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.1hP8sRPabiZ6"
+1526349091928	Marionette	INFO	Enabled via --marionette
+1526349095776	Marionette	INFO	Listening on port 53969
+1526349095994	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+[Child 12000, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/co1526349154384	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.x7TTzkelKsqT"
+1526349156460	Marionette	INFO	Enabled via --marionette
+1526349160108	Marionette	INFO	Listening on port 54105
+1526349160656	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+[Child 28*** UTM:SVC TimerManager:registerTimer called after profile-before-change notification. Ignoring timer registration for id: telemetry_modules_ping
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1526349678437	geckodriver	INFO	geckodriver 0.20.1
+1526349678487	geckodriver	INFO	Listening on 127.0.0.1:49974
+1526349681766	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.ICLSZjPkz7U0"
+1526349693136	Marionette	INFO	Enabled via --marionette
+[Parent 10648, Gecko_IOThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+1526349711770	Marionette	INFO	Listening on port 49986
+1526349712522	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+IPDL protocol error: Handler returned error code!
+
+###!!! [Parent][DispatchAsyncMessage] Error: PLayerTransaction::Msg_ReleaseLayer Processing error: message was deserialized, but the handler returned false (indicating failure)
+
+[Child 11556, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 11556,
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1526349934491	geckodriver	INFO	geckodriver 0.20.1
+1526349934511	geckodriver	INFO	Listening on 127.0.0.1:50364
+1526349937560	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.3GFA5myphh1R"
+1526349939488	Marionette	INFO	Enabled via --marionette
+1526349943346	Marionette	INFO	Listening on port 50373
+1526349943902	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+[Child 11708, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[[Child 11708, CChild 6504, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 6504,
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1526351720058	geckodriver	INFO	geckodriver 0.20.1
+1526351720078	geckodriver	INFO	Listening on 127.0.0.1:51444
+1526351723176	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.ESAVay0n7uw6"
+1526351733220	Marionette	INFO	Enabled via --marionette
+[Child 2732, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 2732, Chrome1526351753566	Marionette	INFO	Listening on port 51452
+1526351754672	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+1526352919522	geckodriver	INFO	geckodriver 0.20.1
+1526352919542	geckodriver	INFO	Listening on 127.0.0.1:52466
+1526352922631	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.yaAcsSF5meVI"
+1526352925842	Marionette	INFO	Enabled via --marionette
+1526352929602	Marionette	INFO	Listening on port 52476
+1526352930594	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+[Child 4164, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 4164, Chrome
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1526353639146	geckodriver	INFO	geckodriver 0.20.1
+1526353639176	geckodriver	INFO	Listening on 127.0.0.1:53063
+1526353642241	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.5w8xKGbirghd"
+1526353643282	Marionette	INFO	Enabled via --marionette
+1526353646962	Marionette	INFO	Listening on port 53072
+1526353647714	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+[Child 6724, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346[
+Child 2836, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 28[GPU 2088, Chrome_ChildThread] WARNING: pipe er
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1526353736344	geckodriver	INFO	geckodriver 0.20.1
+1526353736357	geckodriver	INFO	Listening on 127.0.0.1:53198
+1526353739442	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.mx0Ua1zRwLQm"
+1526353740470	Marionette	INFO	Enabled via --marionette
+1526353744156	Marionette	INFO	Listening on port 53206
+1526353744990	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+[Child 9800, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 9800,
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1526356183769	geckodriver	INFO	geckodriver 0.20.1
+1526356183789	geckodriver	INFO	Listening on 127.0.0.1:54090
+1526356186879	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.5EJx3s9vLrAg"
+1526356195168	Marionette	INFO	Enabled via --marionette
+[Parent 13000, Gecko_IOThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 6644, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+1526356218744	Marionette	INFO	Listening on port 54099
+1526356220248	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+[Child 7536, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 7536, Chrome_ChildThread] WARNING
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1526357169031	geckodriver	INFO	geckodriver 0.20.1
+1526357169051	geckodriver	INFO	Listening on 127.0.0.1:50000
+1526357172121	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.6kvRU5uoCjXf"
+1526357177490	Marionette	INFO	Enabled via --marionette
+[Parent 11144, Gecko_IOThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 3952, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+1526357197756	Marionette	INFO	Listening on port 50009
+1526357198174	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+1526358326218	geckodriver	INFO	geckodriver 0.20.1
+1526358326238	geckodriver	INFO	Listening on 127.0.0.1:51302
+1526358329238	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-mari1526358330638	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\1526358331680	Marionette	INFO	Enabled via --marionette
+\\AppData\\Local\\Temp\\rust_mozprofile.fPijjVfc29G5"
+1526358338436	Marionette	INFO	Enabled via --marionette
+1526358348090	Marionette	INFO	Listening on port 51324
+1526358348926	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+1526359519890	geckodriver	INFO	geckodriver 0.20.1
+1526359519910	geckodriver	INFO	Listening on 127.0.0.1:52266
+1526359522971	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.3n2BlIHer4AT"
+1526359525294	Marionette	INFO	Enabled via --marionette
+1526359533266	Marionette	INFO	Listening on port 52275
+1526359533598	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+1526363081381	geckodriver	INFO	geckodriver 0.20.1
+1526363081414	geckodriver	INFO	Listening on 127.0.0.1:54273
+1526363084404	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.KjMSrOiiQXrt"
+1526363092470	Marionette	INFO	Enabled via --marionette
+[Child 9040, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 9040, C1526363113348	Marionette	INFO	Listening on port 54283
+1526363113976	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+1526365787769	geckodriver	INFO	geckodriver 0.20.1
+1526365787789	geckodriver	INFO	Listening on 127.0.0.1:55792
+1526365790864	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.KKhQcO8PGaFI"
+1526365792852	Marionette	INFO	Enabled via --marionette
+1526365796258	Marionette	INFO	Listening on port 55800
+1526365796940	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+1526366120977	geckodriver	INFO	geckodriver 0.20.1
+1526366120997	geckodriver	INFO	Listening on 127.0.0.1:56514
+1526366124088	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.aaeGFHYaWP0F"
+1526366125596	Marionette	INFO	Enabled via --marionette
+1526366129352	Marionette	INFO	Listening on port 56524
+1526366129428	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+1526366639593	geckodriver	INFO	geckodriver 0.20.1
+1526366639613	geckodriver	INFO	Listening on 127.0.0.1:57237
+1526366642665	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.OxQNYmrQLKk4"
+1526366643628	Marionette	INFO	Enabled via --marionette
+1526366647508	Marionette	INFO	Listening on port 57247
+1526366648168	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+[Parent 1376, Gecko_IOThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Parent 1376, Gecko_IOThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 6348, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346[
+Child 8324, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 8324, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/ch[Parent 1376, Gecko_IOThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+*** UTM:SVC TimerManager:registerTimer called after profile-before-change notification. Ignoring timer registration for id: telemetry_modules_ping
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1526366703228	geckodriver	INFO	geckodriver 0.20.1
+1526366703238	geckodriver	INFO	Listening on 127.0.0.1:57366
+1526366706316	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.2EZaHQvDYhpq"
+1526366707364	Marionette	INFO	Enabled via --marionette
+1526366711070	Marionette	INFO	Listening on port 57374
+1526366711766	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+1526366843034	geckodriver	INFO	geckodriver 0.20.1
+1526366843057	geckodriver	INFO	Listening on 127.0.0.1:57676
+1526366846141	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.RzDdBGJD2yFh"
+1526366847038	Marionette	INFO	Enabled via --marionette
+1526366850744	Marionette	INFO	Listening on port 57685
+1526366851458	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement

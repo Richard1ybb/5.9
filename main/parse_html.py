@@ -5,6 +5,7 @@ from main.readConfig import Services
 from lxml import etree
 from functools import wraps
 import pymysql
+import mysql.connector
 from main.utils import gen_rand_str
 
 
@@ -27,38 +28,53 @@ def singleton(cls):
 # 数据库连接实例
 @singleton
 class MySQLSingle(object):
-    def __init__(self, conn=None):
-        self.conn = conn
-        self.get_conn()
+    def __init__(self):
+        self.conn = self.get_conn()
 
     def get_conn(self):
-        print(Services.Mysql.host)
+        print("connecting to mysql...")
+        print((Services.host, Services.port, Services.username, Services.password, Services.database))
         try:
-            self.conn = pymysql.connect(host=Services.Mysql.host,
-                                        port=Services.Mysql.port,
-                                        user=Services.Mysql.username,
-                                        password=Services.Mysql.password,
-                                        database=Services.Mysql.database,
-                                        charset='utf8'
-                                        )
+            self.conn = mysql.connector.connect(host=Services.host,
+                                                port=Services.port,
+                                                user=Services.username,
+                                                password=Services.password,
+                                                database=Services.database,
+                                                charset='utf8'
+                                                )
+            self.conn.autocommit = True
+
+            # self.conn = pymysql.connect(host=Services.host,
+            #                             port=Services.port,
+            #                             user=Services.username,
+            #                             password=Services.password,
+            #                             database=Services.database,
+            #                             charset='utf8'
+            #                             )
         except Exception as e:
             print('File to connect database: %s' % e)
             print('stop')
+            pass
         return self.conn
 
     def end_conn(self):
         """关闭连接"""
         self.conn.close()
+        print("close connect")
 
     def insert_one_to_xpath(self, params):
         """xpath表中插入一条数据"""
-        sql = "INSERT INTO xpath (id, url, xpath, point_url) VALUES(%d, %s, %s, %s)"
+        print("insert_one_to_xpath " + str(params))
+        sql = "INSERT INTO xpath (id, url, xpath, point_url) VALUES(%s, %s, %s, %s)"
         try:
             # 执行sql语句
             self.conn.cursor().execute(sql, params)
             # 提交到数据库执行
-            self.conn.commit()
+            # self.conn.commit()
+            print("insert_one_to_xpath success")
+
         except Exception as e:
+            print("insert_one_to_xpath fail")
             print(e)
             # 发生错误时回滚
             self.conn.rollback()
@@ -69,13 +85,17 @@ class MySQLSingle(object):
         :param params:
         :return:
         """
-        sql = "INSERT INTO relation (layer_number, id, title, text) VALUES(%d, %d, %s, %s)"
+        print("insert_one_to_relation " + str(params))
+        sql = "INSERT INTO relation (layer_number, id, title, text) VALUES(%s, %s, %s, %s)"
         try:
             # 执行sql语句
             self.conn.cursor().execute(sql, params)
             # 提交到数据库执行
-            self.conn.commit()
+            # self.conn.commit()
+            print("insert_one_to_relation success")
+
         except Exception as e:
+            print("insert_one_to_relation fail")
             print(e)
             # 发生错误时回滚
             self.conn.rollback()
@@ -86,13 +106,17 @@ class MySQLSingle(object):
         :param params:
         :return:
         """
-        sql = "INSERT INTO relation (layer_number, id, last_id, title, text) VALUES(%d, %d, %d, %s, %s)"
+        print("insert_many_to_relation " + str(params))
+        sql = "INSERT INTO relation (layer_number, id, title, text) VALUES(%s, %s, %s, %s)"
         try:
             # 执行sql语句
             self.conn.cursor().executemany(sql, params)
             # 提交到数据库执行
-            self.conn.commit()
+            # self.conn.commit()
+            print("insert_many_to_relation success")
+
         except Exception as e:
+            print("insert_many_to_relation fail")
             print(e)
             # 发生错误时回滚
             self.conn.rollback()
@@ -103,42 +127,56 @@ class MySQLSingle(object):
         :param params:
         :return:
         """
+        print("insert_many_to_content " + str(params))
         sql = "INSERT INTO content (url, father_url, layer_number) VALUES(%s, %s, %s)"
+        print('sql:' + sql)
         try:
             # 执行sql语句
             self.conn.cursor().executemany(sql, params)
             # 提交到数据库执行
-            self.conn.commit()
+            # self.conn.commit()
+            print("insert_many_to_content success")
+
         except Exception as e:
+            print("insert_many_to_content fail")
             print(e)
             # 发生错误时回滚
             self.conn.rollback()
 
     def update_html_to_content(self, url, html):
+        print("update_html_to_content" + ' url:' + url + ' html:' + html)
         sql = "UPDATE content SET content = '%s' WHERE url = '%s'" % html, url
         try:
             # 执行sql语句
             self.conn.cursor().execute(sql)
             # 提交到数据库执行
-            self.conn.commit()
+            # self.conn.commit()
+            print("update_html_to_content success")
+
         except Exception as e:
+            print("update_html_to_content fail")
             print(e)
             # 发生错误时回滚
             self.conn.rollback()
 
     def update_true_status_to_content(self, url):
+        print("update_true_status_to_content" + ' url:' + str(url))
         sql = "UPDATE content SET status = ture WHERE url = '%s'" % url
         try:
             # 执行sql语句
             self.conn.cursor().execute(sql)
             # 提交到数据库执行
-            self.conn.commit()
+            # self.conn.commit()
+            print("update_true_status_to_content success")
+
         except Exception as e:
+            print("update_true_status_to_content fail")
             print(e)
             # 发生错误时回滚
             self.conn.rollback()
 
     def select_url_from_content(self):
+        print("select_url_from_content...")
         sql = "select url from content WHERE status = false"
         a = list()
         try:
@@ -146,7 +184,10 @@ class MySQLSingle(object):
             data = self.conn.cursor().fetchall()
             for i in data:
                 a.append(i[0])
+            print("select_url_from_content success")
+
         except Exception as e:
+            print("select_url_from_content fail")
             print(e)
             # 发生错误时回滚
             self.conn.rollback()
@@ -158,22 +199,22 @@ class MySQLSingle(object):
 class Drivers(object):
     """firefox,ie,chrome驱动"""
     def __init__(self):
-        self.url = Services.TargetUrl.url
+        self.url = Services.url
         self.driver = None
 
     @staticmethod
     def _firefox_driver():
-        driver = webdriver.Firefox(executable_path=Services.WebDriverPath.firefox())
+        driver = webdriver.Firefox(executable_path=Services.firefox)
         return driver
 
     @staticmethod
     def _chrome_driver():
-        driver = webdriver.Chrome(executable_path=Services.WebdriverPath.chrome)
+        driver = webdriver.Chrome(executable_path=Services.chrome)
         return driver
 
     @staticmethod
     def _ie_driver():
-        driver = webdriver.Ie(executable_path=Services.WebdriverPath.ie)
+        driver = webdriver.Ie(executable_path=Services.ie)
         return driver
 
 
@@ -202,6 +243,7 @@ class Parser(Drivers):
         :return:
         """
         self.driver.get(url=url)
+        print(self.driver.current_url)
         self._update_current_url()
 
     def _parser_by_xml(self):
@@ -254,6 +296,9 @@ class Parser(Drivers):
         """更新窗口句柄"""
         self.current_window_handle = self.driver.current_window_handle
 
+    def close_connect(self):
+        self.mysql.end_conn()
+
     def all_aa(self, url, layer_number):
         self._driver_open_url(url)
         page, html = self._parser_by_xml()
@@ -278,7 +323,9 @@ class Parser(Drivers):
                 del self.Xpath_list[i]
                 print('del unable element')
                 pass
-            uid = gen_rand_str(length=8, s_type='digit')
+            uid = int(gen_rand_str(length=7, s_type='digit'))
+            print('(uid, self.driver.current_url, self.Xpath_list[i], self.driver.current_url):' + str(uid) +
+                  self.driver.current_url + self.Xpath_list[i] + self.driver.current_url)
             self.mysql.insert_one_to_xpath((uid, self.driver.current_url, self.Xpath_list[i], self.driver.current_url))
             self.mysql.insert_one_to_relation((layer_number, uid, self.driver.title, text[i]))
         params = [(Url, url) for Url in self.new_url]

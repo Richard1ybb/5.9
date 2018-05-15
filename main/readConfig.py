@@ -28,46 +28,42 @@ class _Services:
 
     @property
     def url(self):
-        print(cf.get('target_url', 'url'))
         return cf.get('target_url', 'url')
 
     @property
     def host(self):
         return cf.get('MySQL', 'host')
 
-    @staticmethod
-    def userame():
-        print(cf.get('MySQL', 'name'))
-        return cf.get('MySQL', 'name')
+    @property
+    def username(self):
+        return cf.get('MySQL', 'username')
 
-    @staticmethod
-    def password():
+    @property
+    def password(self):
         return cf.get('MySQL', 'password')
 
-    @staticmethod
-    def port():
+    @property
+    def port(self):
         return cf.getint('MySQL', 'port')
 
-    @staticmethod
-    def database():
+    @property
+    def database(self):
         return cf.get('MySQL', 'database')
 
-
-    @staticmethod
-    def firefox():
+    @property
+    def firefox(self):
         return cf.get('webdriver_path', 'Firefox')
 
-    @staticmethod
-    def chrome():
+    @property
+    def chrome(self):
         return cf.get('webdriver_path', 'chrome')
 
-    @staticmethod
-    def ie():
+    @property
+    def ie(self):
         return cf.get('webdriver_path', 'ie')
 
-
-    @staticmethod
-    def depth():
+    @property
+    def depth(self):
         return cf.get('depth', 'depth')
 
 
