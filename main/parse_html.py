@@ -8,6 +8,7 @@ import pymysql
 import mysql.connector
 from main.utils import gen_rand_str
 from main.log import logger
+from selenium.common import exceptions
 
 
 def singleton(cls):
@@ -63,6 +64,23 @@ class MySQLSingle(object):
         self.conn.close()
         logger.info("close connect")
 
+    def first_data(self, urls):
+        """初始化数据"""
+        logger.info("first_data")
+        sql = "INSERT INTO content (layer_number, url, status) VALUES (%s, '%s', %s)" % (0, urls, 'true')
+        logger.debug('sql:' + sql)
+        try:
+            # 执行sql语句
+            self.conn.cursor().execute(sql)
+            # 提交到数据库执行
+            # self.conn.commit()
+            logger.info("first_data success")
+
+        except Exception as e:
+            logger.warning("first_data fail: %s" % e)
+            # 发生错误时回滚
+            self.conn.rollback()
+
     def insert_one_to_xpath(self, params):
         """xpath表中插入一条数据"""
         logger.info("insert_one_to_xpath " + str(params))
@@ -76,8 +94,7 @@ class MySQLSingle(object):
             logger.info("insert_one_to_xpath success")
 
         except Exception as e:
-            logger.warning("insert_one_to_xpath fail")
-            logger.warning(e)
+            logger.warning("insert_one_to_xpath fail: %s" % e)
             # 发生错误时回滚
             self.conn.rollback()
 
@@ -98,8 +115,7 @@ class MySQLSingle(object):
             logger.info("insert_one_to_relation success")
 
         except Exception as e:
-            logger.warning("insert_one_to_relation fail")
-            logger.warning(e)
+            logger.warning("insert_one_to_relation fail: %s" % e)
             # 发生错误时回滚
             self.conn.rollback()
 
@@ -120,8 +136,7 @@ class MySQLSingle(object):
             logger.info("insert_many_to_relation success")
 
         except Exception as e:
-            logger.warning("insert_many_to_relation fail")
-            logger.warning(e)
+            logger.warning("insert_many_to_relation fail: %s" % e)
             # 发生错误时回滚
             self.conn.rollback()
 
@@ -142,27 +157,31 @@ class MySQLSingle(object):
             logger.info("insert_many_to_content success")
 
         except Exception as e:
-            logger.warning("insert_many_to_content fail")
-            logger.warning(e)
+            logger.warning("insert_many_to_content fail: %s" % e)
             # 发生错误时回滚
             self.conn.rollback()
 
+# TODO
     def update_html_to_content(self, url, html):
-        logger.info("update_html_to_content" + ' url:' + url + ' html:' + html)
-        sql = "UPDATE content SET content = '%s' WHERE url = '%s'" % html, url
-        logger.debug('sql:' + sql)
-        try:
-            # 执行sql语句
-            self.conn.cursor().execute(sql)
-            # 提交到数据库执行
-            # self.conn.commit()
-            logger.info("update_html_to_content success")
 
-        except Exception as e:
-            logger.warning("update_html_to_content fail")
-            logger.warning(e)
-            # 发生错误时回滚
-            self.conn.rollback()
+        pass
+
+        # html = str(html.encode(encoding='UTF-8', errors='strict'))
+        # logger.info("insert_html_into_content" + ' url:' + url + ' html:' + html)
+        # sql = "UPDATE content SET content = %s WHERE url = %s"
+        # logger.debug('sql:' + sql)
+        # params = (html, url)
+        # try:
+        #     # 执行sql语句
+        #     self.conn.cursor().execute(sql, params)
+        #     # 提交到数据库执行
+        #     # self.conn.commit()
+        #     logger.info("update_html_to_content success")
+        #
+        # except Exception as e:
+        #     logger.warning("update_html_to_content fail: %s" % e)
+        #     # 发生错误时回滚
+        #     self.conn.rollback()
 
     def update_true_status_to_content(self, url):
         logger.info("update_true_status_to_content" + ' url:' + str(url))
@@ -176,8 +195,7 @@ class MySQLSingle(object):
             logger.info("update_true_status_to_content success")
 
         except Exception as e:
-            logger.warning("update_true_status_to_content fail")
-            logger.warning(e)
+            logger.warning("update_true_status_to_content fail: %s" % e)
             # 发生错误时回滚
             self.conn.rollback()
 
@@ -194,8 +212,7 @@ class MySQLSingle(object):
                 logger.info("select_url_from_content success")
 
         except Exception as e:
-            logger.warning("select_url_from_content fail")
-            logger.warning(e)
+            logger.warning("select_url_from_content fail: %s" % e)
             # 发生错误时回滚
             self.conn.rollback()
         return a
@@ -212,16 +229,19 @@ class Drivers(object):
     @staticmethod
     def _firefox_driver():
         driver = webdriver.Firefox(executable_path=Services.firefox)
+        driver.set_page_load_timeout(Services.timeout)
         return driver
 
     @staticmethod
     def _chrome_driver():
         driver = webdriver.Chrome(executable_path=Services.chrome)
+        driver.set_page_load_timeout(Services.timeout)
         return driver
 
     @staticmethod
     def _ie_driver():
         driver = webdriver.Ie(executable_path=Services.ie)
+        driver.set_page_load_timeout(Services.timeout)
         return driver
 
 
@@ -235,6 +255,7 @@ class Parser(Drivers):
         elif a.lower() == "ie":
             self.driver = self._ie_driver()
         else:
+            logger.warning("Wrong driver！Only for: firefox, chrome, ie.")
             raise ValueError("Wrong driver！Only for: firefox, chrome, ie.")
         self.current_url = None
         self.current_window_handle = None
@@ -250,7 +271,7 @@ class Parser(Drivers):
         :return:
         """
         self.driver.get(url=url)
-        print(self.driver.current_url)
+        logger.info("open url :" + self.driver.current_url)
         self._update_current_url()
 
     def _parser_by_xml(self):
@@ -309,8 +330,10 @@ class Parser(Drivers):
     def all_aa(self, url, layer_number):
         self._driver_open_url(url)
         page, html = self._parser_by_xml()
+        self.mysql.update_html_to_content(url=url, html=html)
         tag = self._tag_a_has_href(page)
         text = [a.text for a in tag]
+        main_handle = self.driver.current_window_handle
         self._get_xpath(page=page, tag=tag)
         for i in range(len(self.Xpath_list)):
             element = self.driver.find_element_by_xpath(xpath=self.Xpath_list[i])
@@ -321,23 +344,38 @@ class Parser(Drivers):
                         continue
                     else:
                         self.new_url.append(self.driver.current_url)
-                        self.driver.back()
+                        all_handles = self.driver.window_handles
+                        if len(all_handles) > 1:
+                            for handle in all_handles:
+                                if handle != main_handle:
+                                    try:
+                                        self.driver.switch_to.window(handle)
+                                        self.driver.close()
+                                        logger.debug("close window: " + str(handle))
+                                    except exceptions.NoSuchWindowException as e:
+                                        logger.warning("selenium.common.exceptions.NoSuchWindowException: " + e)
+
+                            self.driver.switch_to.window(main_handle)
+                            logger.info("back to main_handle")
+                        elif len(all_handles) == 1:
+                            self.driver.back()
+                        else:
+                            raise ValueError("window_handle wrong")
                 except:
                     del self.Xpath_list[i]
-                    print('del wrong xpath')
+                    logger.info('del wrong xpath')
                     pass
             else:
                 del self.Xpath_list[i]
-                print('del unable element')
+                logger.info('del unable element')
                 pass
             uid = int(gen_rand_str(length=7, s_type='digit'))
-            print('(uid, self.driver.current_url, self.Xpath_list[i], self.driver.current_url):' + str(uid) +
-                  self.driver.current_url + self.Xpath_list[i] + self.driver.current_url)
+            logger.debug('(uid, self.driver.current_url, self.Xpath_list[i], self.driver.current_url):' + str(uid) +
+                         self.driver.current_url + self.Xpath_list[i] + self.driver.current_url)
             self.mysql.insert_one_to_xpath((uid, self.driver.current_url, self.Xpath_list[i], self.driver.current_url))
             self.mysql.insert_one_to_relation((layer_number, uid, self.driver.title, text[i]))
         params = [(Url, url) for Url in self.new_url]
         self.mysql.insert_many_to_content(params=params)
-        self.mysql.update_html_to_content(url=url, html=html)
         self.mysql.update_true_status_to_content(url=url)
 
 

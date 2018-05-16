@@ -14,6 +14,7 @@ class Main(Parser):
         for i in range(length):
             if i == 0:
                 urls = [Services.url]
+                MySQLSingle().first_data(urls[0])
             else:
                 urls = MySQLSingle.select_url_from_content()
             for ur in urls:
@@ -35,7 +36,15 @@ class Main(Parser):
                         continue
                     else:
                         obj.new_url.append(obj.driver.current_url)
-                        obj.driver.back()
+                        all_handles = obj.driver.window_handles
+                        main_handle = obj.driver.current_window_handle
+                        for handle in all_handles:
+                            if handle != obj.driver.current_window_handle:
+                                obj.driver.switch_to_window(handle)
+                                obj.driver.close()
+                        obj.driver.switch_to_window(main_handle)
+                        logger.info("back to " + obj.driver.current_url)
+
                 except:
                     del obj.Xpath_list[i]
                     logger.warning('delete wrong xpath')

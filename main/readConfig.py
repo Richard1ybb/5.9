@@ -7,7 +7,7 @@ import configparser
 def readconfig():
     config = configparser.RawConfigParser()
     file_path = "C:\\Users\\Summer\\PycharmProjects\\5.9\\main\\init.conf"
-    #file_path = os.path.abspath(os.path.dirname(os.getcwd())) + "\\5.9\\main\\init.conf"
+    # file_path = os.path.abspath(os.path.dirname(os.getcwd())) + "\\5.9\\main\\init.conf"
     config.read(file_path)
     return config
 
@@ -65,6 +65,10 @@ class _Services:
     @property
     def depth(self):
         return cf.get('depth', 'depth')
+
+    @property
+    def timeout(self):
+        return cf.getint('load_timeout', 'timeout')
 
 
 Services = _Services()

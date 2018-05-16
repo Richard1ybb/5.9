@@ -11,7 +11,7 @@ logger.setLevel(logging.DEBUG)
 # logging.FileHandler(self, filename, mode='a', encoding=None, delay=0)
 # A handler class which writes formatted logging records to disk files.
 fh = logging.FileHandler('log.txt')
-fh.setLevel(logging.DEBUG)
+fh.setLevel(logging.INFO)
 
 # create another handler, for stdout in terminal
 # A handler class which writes logging records to a stream
