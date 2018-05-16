@@ -266,3 +266,6 @@ JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable cod
 JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
 JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
 JavaScript warning: https://static-ssl.mediav.com/mv.js, line 1: unreachable code after return statement
+1526442667342	geckodriver	INFO	geckodriver 0.20.1
+1526442667460	geckodriver	INFO	Listening on 127.0.0.1:59951
+1526442670453	mozrunner::runner	INFO	Running command: "D:\\Program Files\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\Summer\\AppData\\Local\\Temp\\rust_mozprofile.aK4nupUquQwd"

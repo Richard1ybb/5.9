@@ -7,6 +7,7 @@ from functools import wraps
 import pymysql
 import mysql.connector
 from main.utils import gen_rand_str
+from main.log import logger
 
 
 def singleton(cls):
@@ -32,8 +33,8 @@ class MySQLSingle(object):
         self.conn = self.get_conn()
 
     def get_conn(self):
-        print("connecting to mysql...")
-        print((Services.host, Services.port, Services.username, Services.password, Services.database))
+        logger.info("connecting to mysql...")
+        logger.info((Services.host, Services.port, Services.username, Services.password, Services.database))
         try:
             self.conn = mysql.connector.connect(host=Services.host,
                                                 port=Services.port,
@@ -52,30 +53,31 @@ class MySQLSingle(object):
             #                             charset='utf8'
             #                             )
         except Exception as e:
-            print('File to connect database: %s' % e)
-            print('stop')
+            logger.warning('File to connect database: %s' % e)
+            logger.warning('stop')
             pass
         return self.conn
 
     def end_conn(self):
         """关闭连接"""
         self.conn.close()
-        print("close connect")
+        logger.info("close connect")
 
     def insert_one_to_xpath(self, params):
         """xpath表中插入一条数据"""
-        print("insert_one_to_xpath " + str(params))
+        logger.info("insert_one_to_xpath " + str(params))
         sql = "INSERT INTO xpath (id, url, xpath, point_url) VALUES(%s, %s, %s, %s)"
+        logger.debug('sql:' + sql)
         try:
             # 执行sql语句
             self.conn.cursor().execute(sql, params)
             # 提交到数据库执行
             # self.conn.commit()
-            print("insert_one_to_xpath success")
+            logger.info("insert_one_to_xpath success")
 
         except Exception as e:
-            print("insert_one_to_xpath fail")
-            print(e)
+            logger.warning("insert_one_to_xpath fail")
+            logger.warning(e)
             # 发生错误时回滚
             self.conn.rollback()
 
@@ -85,18 +87,19 @@ class MySQLSingle(object):
         :param params:
         :return:
         """
-        print("insert_one_to_relation " + str(params))
+        logger.info("insert_one_to_relation " + str(params))
         sql = "INSERT INTO relation (layer_number, id, title, text) VALUES(%s, %s, %s, %s)"
+        logger.debug('sql:' + sql)
         try:
             # 执行sql语句
             self.conn.cursor().execute(sql, params)
             # 提交到数据库执行
             # self.conn.commit()
-            print("insert_one_to_relation success")
+            logger.info("insert_one_to_relation success")
 
         except Exception as e:
-            print("insert_one_to_relation fail")
-            print(e)
+            logger.warning("insert_one_to_relation fail")
+            logger.warning(e)
             # 发生错误时回滚
             self.conn.rollback()
 
@@ -106,18 +109,19 @@ class MySQLSingle(object):
         :param params:
         :return:
         """
-        print("insert_many_to_relation " + str(params))
+        logger.info("insert_many_to_relation " + str(params))
         sql = "INSERT INTO relation (layer_number, id, title, text) VALUES(%s, %s, %s, %s)"
+        logger.debug('sql:' + sql)
         try:
             # 执行sql语句
             self.conn.cursor().executemany(sql, params)
             # 提交到数据库执行
             # self.conn.commit()
-            print("insert_many_to_relation success")
+            logger.info("insert_many_to_relation success")
 
         except Exception as e:
-            print("insert_many_to_relation fail")
-            print(e)
+            logger.warning("insert_many_to_relation fail")
+            logger.warning(e)
             # 发生错误时回滚
             self.conn.rollback()
 
@@ -127,68 +131,71 @@ class MySQLSingle(object):
         :param params:
         :return:
         """
-        print("insert_many_to_content " + str(params))
+        logger.info("insert_many_to_content " + str(params))
         sql = "INSERT INTO content (url, father_url, layer_number) VALUES(%s, %s, %s)"
-        print('sql:' + sql)
+        logger.debug('sql:' + sql)
         try:
             # 执行sql语句
             self.conn.cursor().executemany(sql, params)
             # 提交到数据库执行
             # self.conn.commit()
-            print("insert_many_to_content success")
+            logger.info("insert_many_to_content success")
 
         except Exception as e:
-            print("insert_many_to_content fail")
-            print(e)
+            logger.warning("insert_many_to_content fail")
+            logger.warning(e)
             # 发生错误时回滚
             self.conn.rollback()
 
     def update_html_to_content(self, url, html):
-        print("update_html_to_content" + ' url:' + url + ' html:' + html)
+        logger.info("update_html_to_content" + ' url:' + url + ' html:' + html)
         sql = "UPDATE content SET content = '%s' WHERE url = '%s'" % html, url
+        logger.debug('sql:' + sql)
         try:
             # 执行sql语句
             self.conn.cursor().execute(sql)
             # 提交到数据库执行
             # self.conn.commit()
-            print("update_html_to_content success")
+            logger.info("update_html_to_content success")
 
         except Exception as e:
-            print("update_html_to_content fail")
-            print(e)
+            logger.warning("update_html_to_content fail")
+            logger.warning(e)
             # 发生错误时回滚
             self.conn.rollback()
 
     def update_true_status_to_content(self, url):
-        print("update_true_status_to_content" + ' url:' + str(url))
+        logger.info("update_true_status_to_content" + ' url:' + str(url))
         sql = "UPDATE content SET status = ture WHERE url = '%s'" % url
+        logger.debug('sql:' + sql)
         try:
             # 执行sql语句
             self.conn.cursor().execute(sql)
             # 提交到数据库执行
             # self.conn.commit()
-            print("update_true_status_to_content success")
+            logger.info("update_true_status_to_content success")
 
         except Exception as e:
-            print("update_true_status_to_content fail")
-            print(e)
+            logger.warning("update_true_status_to_content fail")
+            logger.warning(e)
             # 发生错误时回滚
             self.conn.rollback()
 
     def select_url_from_content(self):
-        print("select_url_from_content...")
+        logger.info("select_url_from_content...")
         sql = "select url from content WHERE status = false"
+        logger.debug('sql:' + sql)
         a = list()
         try:
             self.conn.cursor().execute(sql)
             data = self.conn.cursor().fetchall()
             for i in data:
                 a.append(i[0])
-            print("select_url_from_content success")
+                logger.info("select_url_from_content success")
 
         except Exception as e:
-            print("select_url_from_content fail")
-            print(e)
+            logger.warning("select_url_from_content fail")
+            logger.warning(e)
             # 发生错误时回滚
             self.conn.rollback()
         return a

@@ -3,6 +3,7 @@
 from main.parse_html import Drivers, Parser, MySQLSingle
 from main.utils import gen_rand_str
 from main.readConfig import Services
+from main.log import logger
 
 
 class Main(Parser):
@@ -37,14 +38,14 @@ class Main(Parser):
                         obj.driver.back()
                 except:
                     del obj.Xpath_list[i]
-                    print('delete wrong xpath')
+                    logger.warning('delete wrong xpath')
                     pass
                 obj.update_current_url()
                 params = (gen_rand_str(length=8, s_type='digit'), obj.driver.current_url, obj.Xpath_list[i])
                 self.insert_one_to_xpath(params)
 
         else:
-            print('wrong driver, only for firefox, chrome, ie!')
+            logger.warning('wrong driver, only for firefox, chrome, ie!')
 
 
 if __name__ == "__main__":
