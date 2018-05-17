@@ -16,7 +16,7 @@ class Main(Parser):
                 urls = [Services.url]
                 MySQLSingle().first_data(urls[0])
             else:
-                urls = MySQLSingle.select_url_from_content()
+                urls = MySQLSingle().select_url_from_content()
             for ur in urls:
                 self.all_aa(url=ur, layer_number=i + 1)
 
@@ -29,9 +29,11 @@ class Main(Parser):
             page = obj.parser_by_lxml()
             tag = obj.tag_a_has_href(page)
             obj.get_xpath(page=page, tag=tag)
-            for i in range(len(obj.Xpath_list)):
+
+            while len(obj.Xpath_list) > 0:
+                xpath = obj.Xpath_list.pop()
                 try:
-                    obj.driver.find_element_by_xpath(xpath=obj.Xpath_list[i]).click()
+                    obj.driver.find_element_by_xpath(xpath=xpath).click()
                     if obj.driver.current_url == obj.current_url:
                         continue
                     else:

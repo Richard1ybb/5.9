@@ -156,7 +156,11 @@ class MySQLSingle(object):
             # self.conn.commit()
             logger.info("insert_many_to_content success")
 
-        except Exception as e:
+        except mysql.connector.IntegrityError as e:
+            # 唯一性约束去重
+            logger.warning("have same url, lose it: %s" % e)
+
+        except mysql.connector.Error as e:
             logger.warning("insert_many_to_content fail: %s" % e)
             # 发生错误时回滚
             self.conn.rollback()
@@ -185,7 +189,7 @@ class MySQLSingle(object):
 
     def update_true_status_to_content(self, url):
         logger.info("update_true_status_to_content" + ' url:' + str(url))
-        sql = "UPDATE content SET status = ture WHERE url = '%s'" % url
+        sql = "UPDATE content SET status = TRUE WHERE url = '%s'" % url
         logger.debug('sql:' + sql)
         try:
             # 执行sql语句
@@ -205,11 +209,12 @@ class MySQLSingle(object):
         logger.debug('sql:' + sql)
         a = list()
         try:
-            self.conn.cursor().execute(sql)
-            data = self.conn.cursor().fetchall()
+            cur = self.conn.cursor()
+            cur.execute(sql)
+            data = cur.fetchall()
             for i in data:
                 a.append(i[0])
-                logger.info("select_url_from_content success")
+            logger.info("select_url_from_content success")
 
         except Exception as e:
             logger.warning("select_url_from_content fail: %s" % e)
@@ -264,14 +269,33 @@ class Parser(Drivers):
         self.new_url = list()
         self.mysql = MySQLSingle()
 
+    def _check_useful_url(self, url):
+        """
+        检查URL
+        :return:
+        """
+        try:
+            logger.info("check url: " + str(url))
+            self.driver.get(url=url)
+            logger.info("useful url: " + str(url))
+            return True
+        except exceptions.InvalidArgumentException as e:
+            logger.warning("Unuseful url: " + str(url))
+            return False
+
     def _driver_open_url(self, url):
         """
         打开一个URL
         :param url:
         :return:
         """
-        self.driver.get(url=url)
-        logger.info("open url :" + self.driver.current_url)
+        try:
+            logger.info("open url: " + str(url))
+            self.driver.get(url=url)
+            logger.info("current url :" + self.driver.current_url)
+        except exceptions as e:
+            logger.warning("open url: %s fail" % url)
+            logger.warning("error:" + e)
         self._update_current_url()
 
     def _parser_by_xml(self):
@@ -327,7 +351,14 @@ class Parser(Drivers):
     def close_connect(self):
         self.mysql.end_conn()
 
+    def get_back_to_init(self):
+        self.current_url = None
+        self.current_window_handle = None
+        self.Xpath_list = list()
+        self.new_url = list()
+
     def all_aa(self, url, layer_number):
+        xpath = list()
         self._driver_open_url(url)
         page, html = self._parser_by_xml()
         self.mysql.update_html_to_content(url=url, html=html)
@@ -335,11 +366,20 @@ class Parser(Drivers):
         text = [a.text for a in tag]
         main_handle = self.driver.current_window_handle
         self._get_xpath(page=page, tag=tag)
-        for i in range(len(self.Xpath_list)):
-            element = self.driver.find_element_by_xpath(xpath=self.Xpath_list[i])
+        while len(self.Xpath_list) > 0:
+            xp = self.Xpath_list.pop()
+            te = text.pop()
+            logger.debug("len_of_list: " + str(len(self.Xpath_list)))
+            logger.debug("xpath:" + str(xp))
+            try:
+                element = self.driver.find_element_by_xpath(xpath=xp)
+            except exceptions.NoSuchElementException as e:
+                logger.warning(str(e))
+                continue
             if element.is_enabled() is True:
                 try:
                     element.click()
+                    xpath.append(xp)
                     if self.driver.current_url == self.current_url:
                         continue
                     else:
@@ -353,7 +393,7 @@ class Parser(Drivers):
                                         self.driver.close()
                                         logger.debug("close window: " + str(handle))
                                     except exceptions.NoSuchWindowException as e:
-                                        logger.warning("selenium.common.exceptions.NoSuchWindowException: " + e)
+                                        logger.warning("selenium.common.exceptions.NoSuchWindowException: " + str(e))
 
                             self.driver.switch_to.window(main_handle)
                             logger.info("back to main_handle")
@@ -362,22 +402,27 @@ class Parser(Drivers):
                         else:
                             raise ValueError("window_handle wrong")
                 except:
-                    del self.Xpath_list[i]
-                    logger.info('del wrong xpath')
-                    pass
+                    logger.info('throw wrong xpath')
+                    continue
             else:
-                del self.Xpath_list[i]
-                logger.info('del unable element')
-                pass
+                logger.info('throw wrong xpath')
+                continue
             uid = int(gen_rand_str(length=7, s_type='digit'))
             logger.debug('(uid, self.driver.current_url, self.Xpath_list[i], self.driver.current_url):' + str(uid) +
-                         self.driver.current_url + self.Xpath_list[i] + self.driver.current_url)
-            self.mysql.insert_one_to_xpath((uid, self.driver.current_url, self.Xpath_list[i], self.driver.current_url))
-            self.mysql.insert_one_to_relation((layer_number, uid, self.driver.title, text[i]))
-        params = [(Url, url) for Url in self.new_url]
+                         self.driver.current_url + str(xp) + self.driver.current_url)
+            self.mysql.insert_one_to_xpath((uid, self.driver.current_url, str(xp), self.driver.current_url))
+            self.mysql.insert_one_to_relation((layer_number, uid, self.driver.title, te))
+        for i in range(len(self.new_url)):
+            if self._check_useful_url(self.new_url[i]):
+                pass
+            else:
+                del self.new_url[i]
+        params = [(Url, url, layer_number) for Url in self.new_url]
+        logger.debug(self.new_url)
         self.mysql.insert_many_to_content(params=params)
         self.mysql.update_true_status_to_content(url=url)
 
+        self.get_back_to_init()
 
 
 
