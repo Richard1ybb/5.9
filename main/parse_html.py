@@ -279,9 +279,16 @@ class Parser(Drivers):
             self.driver.get(url=url)
             logger.info("useful url: " + str(url))
             return True
-        except exceptions.InvalidArgumentException as e:
+        except exceptions as e:
             logger.warning("Unuseful url: " + str(url))
             return False
+
+        # except exceptions.InvalidArgumentException as e:
+        #     logger.warning("Unuseful url: " + str(url))
+        #     return False
+        # except exceptions.TimeoutException as e:
+        #     logger.warning("Timeout url: " + str(url))
+        #     return False
 
     def _driver_open_url(self, url):
         """

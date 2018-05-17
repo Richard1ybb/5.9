@@ -4,6 +4,7 @@ from main.parse_html import Drivers, Parser, MySQLSingle
 from main.utils import gen_rand_str
 from main.readConfig import Services
 from main.log import logger
+from selenium.common import exceptions
 
 
 class Main(Parser):
@@ -18,7 +19,10 @@ class Main(Parser):
             else:
                 urls = MySQLSingle().select_url_from_content()
             for ur in urls:
-                self.all_aa(url=ur, layer_number=i + 1)
+                try:
+                    self.all_aa(url=ur, layer_number=i + 1)
+                except exceptions.TimeoutException as e:
+                    continue
 
         self.close_connect()
 
