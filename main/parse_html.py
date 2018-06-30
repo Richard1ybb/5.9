@@ -1,6 +1,7 @@
 # encoding:utf-8
 
 from selenium import webdriver
+import selenium
 from main.readConfig import Services
 from lxml import etree
 from functools import wraps
@@ -130,7 +131,7 @@ class MySQLSingle(object):
         logger.debug('sql:' + sql)
         try:
             # 执行sql语句
-            self.conn.cursor().executemany(sql, params)
+            self.conn.cursor().execute(sql, params)
             # 提交到数据库执行
             # self.conn.commit()
             logger.info("insert_many_to_relation success")
@@ -146,12 +147,21 @@ class MySQLSingle(object):
         :param params:
         :return:
         """
+        for p in params:
+            self.insert_one_to_content(p)
+
+    def insert_one_to_content(self, params):
+        """
+        content表中插入多条数据(url, father_url, layer_number)
+        :param params:
+        :return:
+        """
         logger.info("insert_many_to_content " + str(params))
         sql = "INSERT INTO content (url, father_url, layer_number) VALUES(%s, %s, %s)"
         logger.debug('sql:' + sql)
         try:
             # 执行sql语句
-            self.conn.cursor().executemany(sql, params)
+            self.conn.cursor().execute(sql, params)
             # 提交到数据库执行
             # self.conn.commit()
             logger.info("insert_many_to_content success")
@@ -222,7 +232,54 @@ class MySQLSingle(object):
             self.conn.rollback()
         return a
 
-# TODO
+    def select_url(self):
+        logger.info("select_distinct_url_from_xpath...")
+        sql = "select distinct url from xpath"
+        a = list()
+        try:
+            cur = self.conn.cursor()
+            cur.execute(sql)
+            data = cur.fetchall()
+            for i in data:
+                a.append(i[0])
+            logger.info("select point_url from_xpath success")
+
+        except Exception as e:
+            logger.warning("select_point_url_from_content fail: %s" % e)
+            # 发生错误时回滚
+            self.conn.rollback()
+        return a
+
+    def select_text(self, url):
+        logger.info("select text...")
+        sql = "select relation.id,relation.text from relation,xpath where relation.id = xpath.id and xpath.url = '%s'" % url
+        a = list()
+        try:
+            cur = self.conn.cursor()
+            cur.execute(sql)
+            data = cur.fetchall()
+            logger.info("select text success")
+
+        except Exception as e:
+            logger.warning("select_text fail: %s" % e)
+            # 发生错误时回滚
+            self.conn.rollback()
+        return data
+
+    def select_id_text_point_url(self):
+        logger.info("select_id_text_point_url...")
+        sql = "select x.id, r.text, x.point_url from xpath as x,relation as r where x.id = r.id"
+        try:
+            cur = self.conn.cursor()
+            cur.execute(sql)
+            data = cur.fetchall()
+            logger.info("select text success")
+
+        except Exception as e:
+            logger.warning("select_text fail: %s" % e)
+            # 发生错误时回滚
+            self.conn.rollback()
+        return data
 
 
 class Drivers(object):
@@ -279,7 +336,7 @@ class Parser(Drivers):
             self.driver.get(url=url)
             logger.info("useful url: " + str(url))
             return True
-        except exceptions as e:
+        except selenium.common.exceptions.TimeoutException as e:
             logger.warning("Unuseful url: " + str(url))
             return False
 
@@ -300,7 +357,7 @@ class Parser(Drivers):
             logger.info("open url: " + str(url))
             self.driver.get(url=url)
             logger.info("current url :" + self.driver.current_url)
-        except exceptions as e:
+        except selenium.common.exceptions as e:
             logger.warning("open url: %s fail" % url)
             logger.warning("error:" + e)
         self._update_current_url()
@@ -380,7 +437,7 @@ class Parser(Drivers):
             logger.debug("xpath:" + str(xp))
             try:
                 element = self.driver.find_element_by_xpath(xpath=xp)
-            except exceptions.NoSuchElementException as e:
+            except selenium.common.exceptions.NoSuchElementException as e:
                 logger.warning(str(e))
                 continue
             if element.is_enabled() is True:
@@ -390,6 +447,7 @@ class Parser(Drivers):
                     if self.driver.current_url == self.current_url:
                         continue
                     else:
+                        xpath_url = self.driver.current_url
                         self.new_url.append(self.driver.current_url)
                         all_handles = self.driver.window_handles
                         if len(all_handles) > 1:
@@ -399,7 +457,7 @@ class Parser(Drivers):
                                         self.driver.switch_to.window(handle)
                                         self.driver.close()
                                         logger.debug("close window: " + str(handle))
-                                    except exceptions.NoSuchWindowException as e:
+                                    except selenium.common.exceptions.NoSuchWindowException as e:
                                         logger.warning("selenium.common.exceptions.NoSuchWindowException: " + str(e))
 
                             self.driver.switch_to.window(main_handle)
@@ -417,15 +475,19 @@ class Parser(Drivers):
             uid = int(gen_rand_str(length=7, s_type='digit'))
             logger.debug('(uid, self.driver.current_url, self.Xpath_list[i], self.driver.current_url):' + str(uid) +
                          self.driver.current_url + str(xp) + self.driver.current_url)
-            self.mysql.insert_one_to_xpath((uid, self.driver.current_url, str(xp), self.driver.current_url))
+            self.mysql.insert_one_to_xpath((uid, url, str(xp), xpath_url))
             self.mysql.insert_one_to_relation((layer_number, uid, self.driver.title, te))
-        for i in range(len(self.new_url)):
-            if self._check_useful_url(self.new_url[i]):
-                pass
+        url_list = list()
+        while self.new_url:
+            u = self.new_url.pop()
+            if self._check_useful_url(u):
+                url_list.append(u)
+                logger.info("append to url_list: " + str(u))
             else:
-                del self.new_url[i]
-        params = [(Url, url, layer_number) for Url in self.new_url]
-        logger.debug(self.new_url)
+                pass
+        params = [(Url, url, layer_number) for Url in url_list]
+        logger.debug(url_list)
+        print(params)
         self.mysql.insert_many_to_content(params=params)
         self.mysql.update_true_status_to_content(url=url)
 

@@ -65,7 +65,7 @@ class Main(Parser):
 
 if __name__ == "__main__":
     a = Main()
-    a.produce_test_case(length=3)
+    a.produce_test_case(length=2)
 
 
 

@@ -14,6 +14,7 @@ def readconfig():
 
 cf = readconfig()
 
+
 # a_float = config.getfloat('Section1', 'a_float')
 # an_int = config.getint('Section1', 'an_int')
 # print a_float + an_int
@@ -71,13 +72,42 @@ class _Services:
         return cf.getint('load_timeout', 'timeout')
 
 
+class _Write(object):
+    def __init__(self, path):
+        self.config = configparser.RawConfigParser()
+        self.f_path = path
+        self.config.read(self.f_path)
+
+    def __del__(self):
+        with open(self.f_path, 'w') as configfile:
+            self.config.write(configfile)
+        configfile.close()
+
+    def set_url(self, url):
+        self.config.set('target_url', 'url', url)
+
+    def set_host(self, host):
+        self.config.set('MySQL', 'host', host)
+
+    def set_username(self, username):
+        self.config.set('MySQL', 'username', username)
+
+    def set_password(self, password):
+        self.config.set('MySQL', 'password', password)
+
+    def set_port(self, port):
+        self.config.set('MySQL', 'port', port)
+
+    def set_database(self, database):
+        self.config.set('MySQL', 'database', database)
+
+    def set_driver_path(self, driver_path):
+        self.config.set('webdriver_path', 'Firefox', driver_path)
+
+    def set_timeout(self, timeout):
+        self.config.set('load_timeout', 'timeout', timeout)
+
+
 Services = _Services()
-
-
-
-
-
-
-
 
 
